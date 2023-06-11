@@ -9,6 +9,7 @@ TestSmellDetectorJs é uma ferramenta desenvolvida para detecção de 8 tipos de
 | Non Functional Statement | Testes que possuem declarações não funcionais (blocos com escopo vazio "{}")|
 | Only Test | Teste que fazem o uso da propriedade .only() do Jest, impossibilitando a execução de outros testes na suíte |
 | Suboptimal Assert | Teste que utilizam asserções não adequadas para o _framework_ de testes |
+| Unused Imports | Teste que possuem imports não utilizados |
 | Verbose Test | Teste que possuem um nível de instruções superior a 13 |
 | Verify in Setup Method | Teste que possuem instruções de verificação no método de configuração do teste ("beforeEach", "beforeAll", "afterEach", "afterAll") |
 
