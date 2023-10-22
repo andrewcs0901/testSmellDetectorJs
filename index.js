@@ -16,14 +16,15 @@ const JSTestSmellsDetector = (inputCsv, outputCsv) => {
     }
 };
 
+const DEFAULT_FILE_ENCODING = 'utf8';
 
 const getAstsFromFile = (row) => {
     const [file, ...additionalFiles] = row.split(',');
-    const code = readFileSync(file, 'utf8');
+    const code = readFileSync(file, DEFAULT_FILE_ENCODING);
     const testAst = astAnalyzer.getAst(code);
     testAst.program.sourceFile = file;
     const additionalFilesAst = additionalFiles.filter(file => file).map(file => {
-        const code = readFileSync(file, 'utf8');
+        const code = readFileSync(file, DEFAULT_FILE_ENCODING);
         return astAnalyzer.getAst(code);
     });
     return { testAst, additionalFilesAst };
@@ -40,7 +41,7 @@ const exportToCsv = (files) => {
     files.forEach(file => {
         const [testFile] = file.split(',');
         const row = [testFile];
-        try{
+        try {
             const ast = getAstsFromFile(testFile);
             const infos = testInfo(ast.testAst);
             row.push(infos.describeCount);
@@ -52,7 +53,7 @@ const exportToCsv = (files) => {
             log(`Error analyzing file: ${testFile}`);
             log(e.message);
             log(e.stack);
-        } 
+        }
         csv.push(row.join(','));
     });
     return csv.join('\r\n');
@@ -66,11 +67,14 @@ const analyzeFile = ({ testAst, additionalFilesAst }) => {
     return result
 }
 
-const [inputCsv, outputCsv] = process.argv.slice(2);
+const init = () => {
+    const [inputCsv, outputCsv] = process.argv.slice(2);
 
-
-if (inputCsv && outputCsv) {
-    JSTestSmellsDetector(inputCsv.replace(/-input=/, ''), outputCsv.replace(/-output=/, ''));
-} else {
-    console.log('Usage: node index.js -input=<csv file with test files> -output=<csv file with test smells>');
+    if (inputCsv && outputCsv) {
+        JSTestSmellsDetector(inputCsv.replace(/-input=/, ''), outputCsv.replace(/-output=/, ''));
+    } else {
+        console.log('Usage: node index.js -input=<csv file with test files> -output=<csv file with test smells>');
+    };
 }
+
+init()
